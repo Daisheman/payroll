@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "cd ../.. && npm --workspace packages/schemas run build",
     "start": "node dist/src/main.js",
     "start:dev": "npm run build && npm run start:local",
     "start:local": "node dist/src/main.js",

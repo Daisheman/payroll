@@ -9,7 +9,7 @@
 
 ```text
 Root Directory: .
-Build Command: npm install --no-audit --no-fund && npm --workspace apps/api run prisma:generate && npm --workspace apps/api run build
+Build Command: npm install --no-audit --no-fund && npm --workspace packages/schemas run build && npm --workspace apps/api run prisma:generate && npm --workspace apps/api run build
 Start Command: npm --workspace apps/api run start
 Health Check Path: /api/docs
 ```

@@ -41,7 +41,7 @@ apps/api
 Build command from repository root:
 
 ```bash
-npm install --no-audit --no-fund && npm --workspace apps/api run prisma:generate && npm --workspace apps/api run build
+npm install --no-audit --no-fund && npm --workspace packages/schemas run build && npm --workspace apps/api run prisma:generate && npm --workspace apps/api run build
 ```
 
 Start command:
