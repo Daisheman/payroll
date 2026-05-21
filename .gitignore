@@ -26,8 +26,8 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Local storage and generated files
-storage/
-payroll-storage/
+/storage/
+/payroll-storage/
 cookies.txt
 api.out.log
 api.err.log
