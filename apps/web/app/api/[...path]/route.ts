@@ -11,22 +11,32 @@ async function proxy(request: NextRequest, context: RouteContext) {
   const target = new URL(`${API_URL}/${path.join("/")}`);
   target.search = request.nextUrl.search;
 
-  const headers = new Headers(request.headers);
-  headers.set("host", target.host);
-  headers.delete("content-length");
-
   const method = request.method.toUpperCase();
   const hasBody = !["GET", "HEAD"].includes(method);
-  const upstream = await fetch(target, {
+
+  const forwardHeaders: Record<string, string> = {
+    "host": new URL(API_URL).host,
+    "content-type": request.headers.get("content-type") ?? "application/json",
+  };
+
+  const cookie = request.headers.get("cookie");
+  if (cookie) forwardHeaders["cookie"] = cookie;
+
+  const csrf = request.headers.get("x-csrf-token");
+  if (csrf) forwardHeaders["x-csrf-token"] = csrf;
+
+  const upstream = await fetch(target.toString(), {
     method,
-    headers,
+    headers: forwardHeaders,
     body: hasBody ? await request.arrayBuffer() : undefined,
     redirect: "manual",
   });
 
-  const responseHeaders = new Headers(upstream.headers);
-  responseHeaders.delete("content-encoding");
-  responseHeaders.delete("transfer-encoding");
+  const responseHeaders = new Headers();
+  const setCookie = upstream.headers.get("set-cookie");
+  if (setCookie) responseHeaders.set("set-cookie", setCookie);
+  const contentType = upstream.headers.get("content-type");
+  if (contentType) responseHeaders.set("content-type", contentType);
 
   return new NextResponse(upstream.body, {
     status: upstream.status,
