@@ -20,8 +20,8 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     headers: {
       "content-type": "application/json",
       ...csrfHeader,
-      ...(init.headers ?? {}),
-    },
+   ...(init.headers as Record<string, string> ?? {}),
+    } as HeadersInit,
   });
   if (!response.ok) {
     const message = await response.text();
